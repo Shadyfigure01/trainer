@@ -165,6 +165,9 @@ input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex:none
 
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .actions .btn{flex:1 1 auto}
+.btn.ok{border-color:var(--ok);color:var(--ok)}
+.report{display:inline-block;margin-top:10px;font-size:.82rem;color:var(--muted)}
+.report:hover{color:var(--accent)}
 .typebox{margin-top:12px;display:flex;gap:8px}
 .typebox input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 12px}
 .kbd{font:500 .75rem var(--f-mono);color:var(--muted);margin-top:14px}
@@ -282,6 +285,7 @@ dialog::backdrop{background:rgba(5,10,20,.55)}
 
       <div class="actions" id="actions"></div>
       <div class="kbd" id="kbd">Space: mic · H: hint · R: repeat question · S: show answer · Enter: next</div>
+      <a class="report" id="report" href="#" target="_blank" rel="noopener">Report a mistake in this question</a>
     </article>
   </section>
 
@@ -1507,6 +1511,9 @@ function renderCard(){
   $("#cTag").textContent = cur.cat.name + (cur.grp.name!==cur.cat.name && cur.cat.groups.length>1 ? " · "+cur.grp.name : "");
   $("#cLong").textContent = cur.long ? "· recite word for word" : "";
   $("#cPrompt").textContent = cur.q;
+  const FORM = "https://docs.google.com/forms/d/e/1FAIpQLSc2ACR1BBuUOjj-VEAsFZzYbb5is2rRulwBNzHU7_kW7PDTyw/viewform";
+  $("#report").href = FORM + "?usp=pp_url&entry.1177902363=" + encodeURIComponent(CFG.formName || "Warrior Knowledge") + "&entry.2080147616=" + encodeURIComponent(cur.q);
+  $("#report").hidden = cur.cat && cur.cat.id==="mine";
   const m = $("#cMedia"); m.textContent="";
   if(cur.img && IMGS[cur.img]){ m.append(el("div",{class:"plate"+(cur.photo?" photo":"")}, el("img",{src:IMGS[cur.img], alt: cur.photo ? "Photo for this question" : "Rank insignia"}))); }
   if(cur.big){ m.append(el("div",{class:"bigtext", text:cur.big})); }
@@ -1524,6 +1531,8 @@ function renderActions(){
   const a=$("#actions"); a.textContent="";
   const B = (t, fn, cls="") => { const b=el("button",{class:"btn "+cls, text:t}); b.addEventListener("click", fn); a.append(b); return b; };
   if(phase==="done"){
+    const last = results.filter(r=>r.id===cur.id).pop();
+    if(last && !last.ok && !last.hint && !last.overridden){ B("I said it right", overrideCorrect, "ok"); }
     B("Try again", retry);
     B(queue.length ? "Next question" : "Finish", nextCard, "primary");
   } else {
@@ -1795,6 +1804,17 @@ function finish(ok, why){
 function retry(){
   clearTimeout(nextTimer);
   phase="idle"; renderCard(); ask();
+}
+/* The mic mis-heard a correct answer: count it as right instead. */
+function overrideCorrect(){
+  const r = results.filter(x=>x.id===cur.id).pop();
+  if(!r || r.ok) return;
+  r.ok = true; r.overridden = true; okN++; badN = Math.max(0, badN-1);
+  const st = stats[cur.id]; if(st){ st.m = Math.max(0, st.m-1); st.c++; st.last = "c"; store.set("stats", stats); }
+  if(requeued[cur.id]){ const i = queue.indexOf(cur.id); if(i>=0){ queue.splice(i,1); total--; } requeued[cur.id]--; }
+  const card=$("#card"); card.classList.remove("wrong"); card.classList.add("correct");
+  const v=$("#verdict"); v.textContent=""; v.append(el("div",{class:"verdict ok"}, "Counted as correct.", el("small",{text:"If the mic keeps mis-hearing this one, try Lenient strictness in Settings."})));
+  renderHud(); renderActions();
 }
 function giveUp(){
   if(phase==="done") return;

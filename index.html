@@ -58,6 +58,16 @@ h3{font:700 .82rem/1 var(--f-display);letter-spacing:.14em;text-transform:upperc
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font:500 .78rem var(--f-mono);color:var(--muted);letter-spacing:.04em}
 @media (max-width:560px){ .steps{grid-template-columns:1fr} h1{font-size:1.9rem} header img{width:68px;height:68px} }
 @media (prefers-reduced-motion: reduce){ .card{transition:none} .card:hover,.card:active{transform:none!important} }
+.dev{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--ink);text-decoration:none;border:2px solid var(--accent);border-radius:14px;padding:9px 14px 9px 10px;box-shadow:0 4px 0 color-mix(in srgb,var(--accent) 55%,#000);transition:transform .22s cubic-bezier(.34,1.8,.55,1), box-shadow .18s}
+.dev svg{width:22px;height:22px;flex:none;color:var(--accent)}
+.dev span{display:flex;flex-direction:column;line-height:1.15}
+.dev b{font:800 .95rem/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.dev small{font:600 .72rem var(--f-mono);color:var(--muted)}
+@media (hover:hover){ .dev:hover{transform:translateY(-3px) scale(1.07) rotate(-1.5deg);box-shadow:0 7px 0 color-mix(in srgb,var(--accent) 55%,#000)} }
+.dev:active{transform:translateY(3px) scale(.96);box-shadow:0 0 0 transparent;transition-duration:.06s}
+.dev:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion: reduce){ .dev{transition:none} .dev:hover,.dev:active{transform:none} }
+main{padding-bottom:110px}
 </style></head><body>
 <main>
   <header>
@@ -103,5 +113,9 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font:50
   </ul>
 
   <footer>Built for the Nighthawks of Det 490 · NJIT · <a href="https://docs.google.com/forms/d/e/1FAIpQLSc2ACR1BBuUOjj-VEAsFZzYbb5is2rRulwBNzHU7_kW7PDTyw/viewform" target="_blank" rel="noopener" style="color:inherit">Report a mistake</a></footer>
+  <a class="dev" href="https://docs.google.com/forms/d/e/1FAIpQLSdltSD0mWtyyCXWp8w3clpF_OM_7eMxoDpJHDKBZEGFioKdbA/viewform" target="_blank" rel="noopener" aria-label="Contact the developer, C/3C Smith">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4.5"/></svg>
+    <span><b>Contact developer</b><small>C/3C Smith</small></span>
+  </a>
 </main>
 </body></html>

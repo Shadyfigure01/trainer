@@ -707,30 +707,28 @@ const CATS = [
     {id:"rk_cadet_img", name:"AFROTC cadet insignia", items: CADET.map(c=>({id:"rk_"+c[0], q:"Name this AFROTC cadet rank.", img:"r_"+c[0], a:c[2], show:`${c[2]} (${c[1]})`}))},
     {id:"rk_cadet_order", name:"Cadet ranks in order", items:[{id:"rk_cadet_order", q:"Recite the AFROTC cadet ranks from lowest to highest.", long:true, a:listAns(CADET.map(c=>c[2])), show:CADET.map(c=>`${c[2]} (${c[1]})`).join("\n")}]},
     {id:"rk_off_img", name:"Officer insignia", items: OFFICER.map(o=>({id:"rk_img_"+o[0], q:"Name this Air Force officer rank.", img:"r_"+o[0], a:o[2], show:`${o[2]} (${o[1]}, ${o[3]})`}))},
-    {id:"rk_off_grade", name:"Officer pay grades", items: OFFICER.filter(o=>o[1]!=="Special").map(o=>({id:"rk_grade_"+o[0], q:`What Air Force officer rank is pay grade ${o[1]}?`, say:`What Air Force officer rank is pay grade ${gradeSay(o[1])}?`, a:o[2], show:o[2]}))},
+    {id:"rk_off_grade", name:"Officer ranks by grade", items: OFFICER.filter(o=>o[1]!=="Special").map(o=>({id:"rk_grade_"+o[0], q:`What Air Force officer rank is ${o[1]}?`, say:`What Air Force officer rank is ${gradeSay(o[1])}?`, a:o[2], show:o[2]}))},
     {id:"rk_off_abbr", name:"Officer abbreviations", items: OFFICER.map(o=>({id:"rk_abbr_"+o[0], q:`What rank is abbreviated “${o[3]}”?`, say:"What rank does this abbreviation stand for?", big:o[3], a:o[2], show:o[2]}))},
     {id:"rk_off_order", name:"Officer ranks in order", items:[{id:"rk_off_order", q:"Recite the Air Force officer ranks from O-1 to O-10.", say:"Recite the Air Force officer ranks from O 1 to O 10.", long:true, a:listAns(OFFICER.slice(0,10).map(o=>o[2])), show:OFFICER.slice(0,10).map(o=>`${o[1]}  ${o[2]}`).join("\n")}]},
     {id:"rk_wo", name:"Warrant officers", items: [
       ...WARRANT.map(w=>({id:"rk_img_"+w[0], q:"Name this Air Force warrant officer rank.", img:"r_"+w[0], a:w[2], show:`${w[2]} (${w[1]}, ${w[3]})`})),
-      ...WARRANT.map(w=>({id:"rk_grade_"+w[0], q:`What warrant officer rank is pay grade ${w[1]}?`, say:`What warrant officer rank is pay grade ${gradeSay(w[1])}?`, a:w[2], show:w[2]}))
+      ...WARRANT.map(w=>({id:"rk_grade_"+w[0], q:`What warrant officer rank is ${w[1]}?`, say:`What warrant officer rank is ${gradeSay(w[1])}?`, a:w[2], show:w[2]}))
     ]},
     {id:"rk_enl_img", name:"AF enlisted insignia", items: AF_ENL.filter(e=>e[0]!=="ab").map(e=>({id:"rk_img_"+e[0], q:"Name this Air Force enlisted rank.", img:"r_"+e[0], a:e[2], show:`${e[2]} (${e[3]}, ${e[1]})`}))},
-    {id:"rk_enl_grade", name:"AF enlisted pay grades", items: [
-      ...AF_ENL.slice(0,8).map(e=>({id:"rk_grade_"+e[0], q:`What Air Force enlisted rank is pay grade ${e[1]}?`, say:`What Air Force enlisted rank is pay grade ${gradeSay(e[1])}?`, a:e[2], show:e[2]})),
+    {id:"rk_enl_grade", name:"AF enlisted ranks by grade", items: [
+      ...AF_ENL.slice(0,8).map(e=>({id:"rk_grade_"+e[0], q:`What Air Force enlisted rank is ${e[1]}?`, say:`What Air Force enlisted rank is ${gradeSay(e[1])}?`, a:e[2], show:e[2]})),
       {id:"rk_grade_af_e9", q:"Name all three Air Force E-9 ranks.", say:"Name all three Air Force E 9 ranks.",
        a: permutations(["Chief Master Sergeant","Command Chief Master Sergeant","Chief Master Sergeant of the Air Force"]).map(p=>listAns(p)),
        show:"Chief Master Sergeant, Command Chief Master Sergeant, Chief Master Sergeant of the Air Force (any order)"},
-      ...AF_ENL.map(e=>({id:"rk_rgrade_"+e[0], q:`What pay grade is an Air Force ${e[2]}?`, a:"(pay grade) "+e[1], show:e[1]}))
     ]},
     {id:"rk_enl_abbr", name:"AF enlisted abbreviations", items: AF_ENL.map(e=>({id:"rk_abbr_"+e[0], q:`What rank is abbreviated “${e[3]}”?`, say:"What rank does this abbreviation stand for?", big:e[3], a:e[2], show:e[2]}))},
     {id:"rk_enl_order", name:"AF enlisted in order", items:[{id:"rk_enl_order", q:"Recite the Air Force enlisted ranks from E-1 to E-9.", say:"Recite the Air Force enlisted ranks from E 1 to E 9.", long:true, a:listAns(AF_ENL.map(e=>e[2])), show:AF_ENL.map(e=>`${e[1]}  ${e[2]}`).join("\n")}]},
     {id:"rk_sf_img", name:"Space Force enlisted insignia", items: SF_ENL.map(e=>({id:"rk_img_"+e[0], q:"Name this Space Force enlisted rank.", img:"r_"+e[0], a:e[2], show:`${e[2]} (${e[3]}, ${e[1]})`}))},
-    {id:"rk_sf_grade", name:"Space Force pay grades", items: [
-      ...SF_ENL.slice(0,8).map(e=>({id:"rk_grade_"+e[0], q:`What Space Force enlisted rank is pay grade ${e[1]}?`, say:`What Space Force enlisted rank is pay grade ${gradeSay(e[1])}?`, a:e[2], show:e[2]})),
+    {id:"rk_sf_grade", name:"Space Force ranks by grade", items: [
+      ...SF_ENL.slice(0,8).map(e=>({id:"rk_grade_"+e[0], q:`What Space Force enlisted rank is ${e[1]}?`, say:`What Space Force enlisted rank is ${gradeSay(e[1])}?`, a:e[2], show:e[2]})),
       {id:"rk_grade_sf_e9", q:"Name both Space Force E-9 ranks.", say:"Name both Space Force E 9 ranks.",
        a:["Chief Master Sergeant, (and) Chief Master Sergeant of the Space Force","Chief Master Sergeant of the Space Force, (and) Chief Master Sergeant"],
        show:"Chief Master Sergeant, Chief Master Sergeant of the Space Force (any order)"},
-      ...SF_ENL.map(e=>({id:"rk_rgrade_"+e[0], q:`What pay grade is a Space Force ${e[2]}?`, a:"(pay grade) "+e[1], show:e[1]}))
     ]},
     {id:"rk_sf_abbr", name:"Space Force abbreviations", items: SF_ENL.filter(e=>["Spc 1","Spc 2","Spc 3","Spc 4","Sgt","CMSSF"].includes(e[3])).map(e=>({id:"rk_abbr_"+e[0], q:`In the Space Force, what rank is abbreviated “${e[3]}”?`, say:"In the Space Force, what rank does this abbreviation stand for?", big:e[3], a:e[2], show:e[2]}))},
     {id:"rk_sf_order", name:"Space Force enlisted in order", items:[{id:"rk_sf_order", q:"Recite the Space Force enlisted ranks from E-1 to E-9.", say:"Recite the Space Force enlisted ranks from E 1 to E 9.", long:true, a:listAns(SF_ENL.map(e=>e[2])), show:SF_ENL.map(e=>`${e[1]}  ${e[2]}`).join("\n")}]}

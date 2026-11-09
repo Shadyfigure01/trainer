@@ -274,6 +274,33 @@ input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex:none
   .go,.card .verdict{animation:none}
 }
 
+/* weekly test */
+.wkc{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin:4px 0 14px;box-shadow:0 4px 0 var(--line)}
+.wkc h2{margin:0;font:800 1.5rem/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase}
+.wkc .sub{margin:6px 0 14px;color:var(--muted);font-size:.92rem}
+.wkc .lab{font:700 .74rem/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{border:2px solid var(--line);background:var(--surface2);border-radius:12px;padding:10px 12px;text-align:left;font-weight:600;min-height:52px}
+.seg button small{display:block;font:600 .72rem var(--f-mono);color:var(--muted);margin-top:2px}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.weeks{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.weeks button{border:2px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 0;font:700 .9rem/1 var(--f-mono);min-height:40px;position:relative}
+.weeks button small{display:block;font:600 .6rem/1 var(--f-mono);color:var(--muted);margin-top:3px;letter-spacing:.04em}
+.weeks button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
+.weeks button[aria-pressed="true"] small{color:inherit;opacity:.8}
+.weeks button.past{background:var(--accent-soft)}
+.weeks button.brk{opacity:.55}
+.topics{display:flex;flex-wrap:wrap;gap:6px}
+.topic{font-size:.84rem;border-radius:999px;padding:5px 10px;border:1px solid var(--line);background:var(--surface2)}
+.topic.new{border-color:var(--accent);color:var(--accent);font-weight:600}
+.wkfoot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+.wkfoot .chk{display:flex;align-items:center;gap:8px;font-size:.88rem;flex:1;min-width:200px}
+.wkfoot .n{font:800 1.3rem/1 var(--f-display);letter-spacing:.02em}
+.wkfoot .n small{display:block;font:500 .78rem var(--f-body);color:var(--muted);letter-spacing:0}
+@media (max-width:480px){ .weeks{grid-template-columns:repeat(7,minmax(0,1fr));gap:4px} .weeks button{font-size:.8rem} .seg{grid-template-columns:1fr} }
+@media (hover:hover){ .seg button,.weeks button{transition:transform .2s cubic-bezier(.34,1.8,.55,1)} .seg button:hover,.weeks button:hover{transform:translateY(-2px) scale(1.06)} }
+.seg button:active,.weeks button:active{transform:scale(.94)}
+
 /* editor */
 .ed{display:flex;flex-direction:column;gap:8px;padding-top:14px}
 .ed label{font-weight:600;font-size:.9rem}
@@ -336,6 +363,7 @@ dialog::backdrop{background:rgba(5,10,20,.55)}
     <div id="compat"></div>
     <p class="lede" id="lede">Pick what you want to be asked. It reads each question out loud, listens while you answer, and buzzes the moment you say a wrong word. Questions come up in random order and nothing repeats until you've been through them all.</p>
 
+    <div id="weekCard"></div>
     <div id="chalCard"></div>
 
     <div class="label">Practice · Quick picks</div>
@@ -797,6 +825,66 @@ const CATS = [
 ];
 
 
+
+/* ---------- F26 WK Plan: what each AS level is expected to know by training week ---------- */
+const WK_TOPICS = {
+  missions:   {label:"All missions", ids:["af_mission","sf_mission","holm_mission","rotc_mission","ft_mission"]},
+  afMission:  {label:"Air Force mission", ids:["af_mission"]},
+  sfMission:  {label:"Space Force mission", ids:["sf_mission"]},
+  rotcMission:{label:"AFROTC mission", ids:["rotc_mission"]},
+  holmMission:{label:"Holm Center mission", ids:["holm_mission"]},
+  core:       {label:"Core Values", ids:["core_values"]},
+  honor:      {label:"Honor Code", ids:["honor_code"]},
+  responses:  {label:"Seven Basic Responses", ids:["resp_all"]},
+  cadetRanks: {label:"AFROTC cadet ranks", groups:["rk_cadet_img","rk_cadet_order"]},
+  creed12:    {label:"Airman's Creed, stanzas 1–2", ids:["creed_1","creed_2"]},
+  creed34:    {label:"Airman's Creed, stanzas 3–4", ids:["creed_3","creed_4","creed_full"]},
+  creed:      {label:"Airman's Creed", ids:["creed_1","creed_2","creed_3","creed_4","creed_full"]},
+  song1:      {label:"Air Force Song, verse 1", ids:["afsong_1"]},
+  song2:      {label:"Air Force Song, verse 2", ids:["afsong_2"]},
+  songAll:    {label:"Entire Air Force Song", ids:["afsong_1","afsong_2","afsong_3","afsong_4"]},
+  sfSong:     {label:"Space Force Song", ids:["sfsong"]},
+  offRanks:   {label:"Air Force officer ranks", groups:["rk_off_img","rk_off_grade","rk_off_abbr","rk_off_order"]},
+  enlRanks:   {label:"Air Force enlisted ranks", groups:["rk_enl_img","rk_enl_grade","rk_enl_abbr","rk_enl_order"]},
+  sfRanks:    {label:"Space Force enlisted ranks", groups:["rk_sf_img","rk_sf_grade","rk_sf_abbr","rk_sf_order"]},
+  woRanks:    {label:"Warrant officer ranks", groups:["rk_wo"]},
+  allRanks:   {label:"All Air and Space Force ranks", groups:["rk_off_img","rk_off_grade","rk_off_abbr","rk_off_order","rk_enl_img","rk_enl_grade","rk_enl_abbr","rk_enl_order","rk_sf_img","rk_sf_grade","rk_sf_abbr","rk_sf_order","rk_wo"]},
+  coc123:     {label:"Code of Conduct, Articles I–III", ids:["coc_1","coc_2","coc_3"]},
+  coc456:     {label:"Code of Conduct, Articles IV–VI", ids:["coc_4","coc_5","coc_6","coc_full"]},
+  chain:      {label:"National Chain of Command", groups:["chain_who","chain_pos","chain_full"]},
+  oathEnl:    {label:"Oath of Enlistment", ids:["oath_enlist","oath_which_enlist"]},
+  oathOff:    {label:"Oath of Office", ids:["oath_office","oath_which_office"]},
+  usafMaj:    {label:"USAF Major Commands", ids:[0,1,2,3,4,5,6,7,8].flatMap(i=>["mc_b_"+i,"mc_p_"+i,"mc_w_"+i])},
+  ussfMaj:    {label:"USSF Major (Field) Commands", ids:[9,10,11].flatMap(i=>["mc_b_"+i,"mc_p_"+i,"mc_w_"+i])},
+  qGabriel:   {label:"Quote by Gen Charles A. Gabriel", ids:["quote_0","quote_who_0"]},
+  qAdams:     {label:"Quote by John Quincy Adams", ids:["quote_1","quote_who_1"]},
+  qPowell:    {label:"Quote by Colin Powell", ids:["quote_2","quote_who_2"]},
+  qRobinson:  {label:"Quote by Gen Lori J. Robinson", ids:["quote_3","quote_who_3"]}
+};
+const WK_PLAN = {
+  tracks: [
+    {id:"200", name:"AS 200s", sub:"BCL", weeks:{
+      2:["missions","core","honor","responses","cadetRanks"],
+      3:["creed","song1","allRanks"],
+      4:["coc123"], 5:["coc456"],
+      6:["chain","oathEnl"], 7:["song2","sfSong"], 8:["songAll"],
+      9:["usafMaj","ussfMaj"], 10:["qPowell","woRanks","oathOff"],
+      11:["qGabriel","qAdams"], 12:["qRobinson"]
+    }},
+    {id:"100", name:"AS 100s & 250s", sub:"BC", weeks:{
+      2:["responses","cadetRanks","core","honor"],
+      3:["afMission","offRanks","enlRanks"],
+      4:["rotcMission","creed12","holmMission"],
+      5:["creed34","sfRanks","missions"],
+      6:["chain","sfMission","song1"],
+      7:["coc123"], 8:["sfSong","oathEnl"], 9:["coc456"],
+      10:["usafMaj","oathOff"], 11:["ussfMaj","qGabriel","qPowell"],
+      12:["qRobinson","woRanks"], 14:["qAdams"]
+    }}
+  ],
+  weeksTotal: 14, breakWeek: 13
+};
+if(typeof module!=="undefined") module.exports.WK_PLAN = WK_PLAN, module.exports.WK_TOPICS = WK_TOPICS;
 </script>
 <script>/* ===== Matching engine: turns answer text into a word-by-word state machine
    and checks a live transcript against it. ===== */
@@ -1644,6 +1732,54 @@ function leaveChallengeUI(){ mode="drill"; $("#chud").hidden = true; $("#hudMete
 $("#btnChAgain").addEventListener("click", () => startChallenge(chKind));
 $("#btnChBack").addEventListener("click", () => { leaveChallengeUI(); show("vSetup"); renderChalCard(); renderQuick(); renderCats(); });
 
+/* ---------- weekly test (from the F26 WK Plan) ---------- */
+const PLAN = (typeof WK_PLAN!=="undefined") ? WK_PLAN : null;
+let wkSel = Object.assign({track: PLAN ? PLAN.tracks[0].id : null, week: 2, cumulative: true}, store.get("wkSel", {}));
+function topicIds(key){
+  const t = WK_TOPICS[key]; if(!t) return [];
+  const ids = [...(t.ids||[])];
+  (t.groups||[]).forEach(gid => CATS.forEach(c => c.groups.forEach(g => { if(g.id===gid) g.items.forEach(i => ids.push(i.id)); })));
+  return ids.filter(id => ITEMS[id]);
+}
+function weekIds(trackId, week, cumulative){
+  const tr = PLAN.tracks.find(t=>t.id===trackId); const set = new Set();
+  for(let w=1; w<=week; w++){ if(!cumulative && w!==week) continue; (tr.weeks[w]||[]).forEach(k => topicIds(k).forEach(id=>set.add(id))); }
+  return ORDER.filter(id => set.has(id));
+}
+function renderWeekCard(){
+  const box = $("#weekCard"); if(!box) return; box.textContent = "";
+  if(!PLAN) return;
+  const tr = PLAN.tracks.find(t=>t.id===wkSel.track) || PLAN.tracks[0];
+  const save = () => { store.set("wkSel", wkSel); renderWeekCard(); };
+  const seg = el("div",{class:"seg"});
+  PLAN.tracks.forEach(t => { const b = el("button",{"aria-pressed": String(t.id===tr.id)}, t.name, el("small",{text:t.sub})); b.addEventListener("click", () => { wkSel.track=t.id; save(); }); seg.append(b); });
+  const weeks = el("div",{class:"weeks"});
+  for(let w=1; w<=PLAN.weeksTotal; w++){
+    const has = (tr.weeks[w]||[]).length, brk = w===PLAN.breakWeek;
+    const b = el("button",{"aria-pressed": String(w===wkSel.week), class: (w<wkSel.week ? "past " : "") + (brk ? "brk" : ""), title: brk ? "Break" : (has ? "New WK this week" : "Nothing new this week")}, String(w), el("small",{text: brk ? "break" : (has ? "new" : "—")}));
+    b.addEventListener("click", () => { wkSel.week=w; save(); }); weeks.append(b);
+  }
+  const topics = el("div",{class:"topics"});
+  const newKeys = tr.weeks[wkSel.week] || [];
+  const earlier = []; for(let w=1; w<wkSel.week; w++) (tr.weeks[w]||[]).forEach(k => { if(!earlier.includes(k)) earlier.push(k); });
+  newKeys.forEach(k => topics.append(el("span",{class:"topic new", text: WK_TOPICS[k].label})));
+  if(!newKeys.length) topics.append(el("span",{class:"topic", text: wkSel.week===PLAN.breakWeek ? "Break week. Nothing new." : "Nothing new this week."}));
+  if(wkSel.cumulative) earlier.filter(k=>!newKeys.includes(k)).forEach(k => topics.append(el("span",{class:"topic", text: WK_TOPICS[k].label})));
+  const ids = weekIds(tr.id, wkSel.week, wkSel.cumulative);
+  const cum = el("input",{type:"checkbox", id:"wkCum"}); cum.checked = wkSel.cumulative;
+  cum.addEventListener("change", () => { wkSel.cumulative = cum.checked; save(); });
+  const go = el("button",{class:"btn primary big", text:`Start TW-${wkSel.week} test`}); go.disabled = !ids.length;
+  go.addEventListener("click", () => startDrill(ids));
+  box.append(el("div",{class:"wkc"},
+    el("h2",{text:"Weekly WK test"}),
+    el("p",{class:"sub", text:"Pick your AS level and training week. You'll get random questions on everything you're expected to know by then, from the F26 WK Plan."}),
+    el("div",{class:"lab", text:"AS level"}), seg,
+    el("div",{class:"lab", text:"Training week"}), weeks,
+    el("div",{class:"lab", text: wkSel.cumulative ? `Covered by TW-${wkSel.week} (new this week highlighted)` : `New in TW-${wkSel.week}`}), topics,
+    el("div",{class:"wkfoot"}, el("label",{class:"chk", for:"wkCum"}, cum, "Include earlier weeks"), el("div",{class:"n"}, String(ids.length), el("small",{text:"questions"})), go)
+  ));
+}
+
 /* ---------- drill state ---------- */
 let queue=[], cur=null, done=0, total=0, okN=0, badN=0, results=[], requeued={}, baseSet=[];
 let phase="idle"; // idle | asking | listening | done
@@ -2181,7 +2317,7 @@ document.addEventListener("keydown", e => {
 document.addEventListener("visibilitychange", () => { if(document.visibilityState==="visible" && !$("#vDrill").hidden && navigator.wakeLock){ navigator.wakeLock.request("screen").then(w=>wakeLock=w).catch(()=>{}); } });
 
 if(!voiceOK) typingMode = true;
-renderCompat(); renderChalCard(); renderQuick(); renderCats(); show("vSetup");
+renderCompat(); renderWeekCard(); renderChalCard(); renderQuick(); renderCats(); show("vSetup");
 window.__wk = {ITEMS, Engine, S, get cur(){return cur;}, get phase(){return phase;}};
 })();
 </script>

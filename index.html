@@ -29,7 +29,9 @@ h1{font:800 2.3rem/1 var(--f-display);letter-spacing:.02em;text-transform:upperc
 
 .cards{display:flex;flex-direction:column;gap:12px}
 .card{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;transition:border-color .15s, transform .15s}
-.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card{box-shadow:0 4px 0 var(--line);transition:transform .25s cubic-bezier(.34,1.8,.55,1), box-shadow .2s, border-color .15s}
+@media (hover:hover){ .card:hover{border-color:var(--accent);transform:translateY(-3px) scale(1.03) rotate(-.8deg);box-shadow:0 8px 0 var(--line)} .card:nth-child(2):hover{transform:translateY(-3px) scale(1.03) rotate(.8deg)} }
+.card:active{transform:translateY(3px) scale(.98)!important;box-shadow:0 0 0 transparent;transition-duration:.06s}
 .card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .card .ic{width:56px;height:56px;flex:none;display:grid;place-items:center;border-radius:14px;background:var(--accent-soft)}
 .card .ic img{width:48px;height:48px;border-radius:50%;background:var(--plate)}
@@ -55,7 +57,7 @@ h3{font:700 .82rem/1 var(--f-display);letter-spacing:.14em;text-transform:upperc
 .notes b{color:var(--ink);font-weight:600}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font:500 .78rem var(--f-mono);color:var(--muted);letter-spacing:.04em}
 @media (max-width:560px){ .steps{grid-template-columns:1fr} h1{font-size:1.9rem} header img{width:68px;height:68px} }
-@media (prefers-reduced-motion: reduce){ .card{transition:none} .card:hover{transform:none} }
+@media (prefers-reduced-motion: reduce){ .card{transition:none} .card:hover,.card:active{transform:none!important} }
 </style></head><body>
 <main>
   <header>
